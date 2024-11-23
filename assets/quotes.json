@@ -1,0 +1,88 @@
+{
+  "quotes": [
+    {
+      "author": "Alan Turing",
+      "quote": "We can only see a short distance ahead, but we can see plenty there that needs to be done."
+    },
+    {
+      "author": "Ada Lovelace",
+      "quote": "That brain of mine is something more than merely mortal; as time will show."
+    },
+    {
+      "author": "Tim Berners-Lee",
+      "quote": "The Web does not just connect machines, it connects people."
+    },
+    {
+      "author": "Donald Knuth",
+      "quote": "Premature optimization is the root of all evil."
+    },
+    {
+      "author": "Grace Hopper",
+      "quote": "The most dangerous phrase in the language is, 'We've always done it this way.'"
+    },
+    {
+      "author": "Linus Torvalds",
+      "quote": "Talk is cheap. Show me the code."
+    },
+    {
+      "author": "Margaret Hamilton",
+      "quote": "There was no time to be polite. We had to get the job done."
+    },
+    {
+      "author": "Bill Gates",
+      "quote": "Your most unhappy customers are your greatest source of learning."
+    },
+    {
+      "author": "Steve Jobs",
+      "quote": "Innovation distinguishes between a leader and a follower."
+    },
+    {
+      "author": "Bjarne Stroustrup",
+      "quote": "There are only two kinds of languages: the ones people complain about and the ones nobody uses."
+    },
+    {
+      "author": "John McCarthy",
+      "quote": "As soon as it works, no one calls it AI anymore."
+    },
+    {
+      "author": "Edsger Dijkstra",
+      "quote": "Simplicity is a prerequisite for reliability."
+    },
+    {
+      "author": "Barbara Liskov",
+      "quote": "The key to building a successful system is to make it easy to use."
+    },
+    {
+      "author": "Robert Noyce",
+      "quote": "Don't be encumbered by history, just go out and do something wonderful."
+    },
+    {
+      "author": "Marissa Mayer",
+      "quote": "I always did something I was a little not ready to do. I think that's how you grow."
+    },
+    {
+      "author": "Jeff Dean",
+      "quote": "The best way to predict the future is to invent it."
+    },
+    {
+      "author": "Ada Lovelace",
+      "quote": "I am more than a mathematician; I am a poet."
+    },
+    {
+      "author": "Alan Turing",
+      "quote": "A computer would deserve to be called intelligent if it could deceive a human into believing that it was human."
+    },
+    {
+      "author": "Tim Berners-Lee",
+      "quote": "The Web is more a social creation than a technical one."
+    },
+    {
+      "author": "Bill Gates",
+      "quote": "If you are born poor it's not your mistake, but if you die poor it's your mistake."
+    },
+    {
+      "author": "Linus Torvalds",
+      "quote": "I'm not a visionary. I'm just a guy who likes to code."
+    }
+  ]
+}
