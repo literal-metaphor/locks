@@ -3,6 +3,7 @@ from datetime import datetime
 from PIL import Image, ImageTk
 import json
 from random import choice
+from keyboard import block_key
 
 # TODO: Specify name main thingy
 
@@ -10,12 +11,32 @@ from random import choice
 # Initialize root #
 ###################
 root = tk.Tk()
+root.title("locks")
 
 # Prevent interaction outside the lock screen
-root.attributes('-fullscreen',True)
+# Focus fullscreen with no border
+root.wm_attributes('-fullscreen',True)
+# Force always on top of other app
+root.wm_attributes("-topmost", True)
 root.overrideredirect(True)
-# TODO: Prevent using Windows/Super key, Alt-F4, and other sneaky tactics
-# * Suggestion: Create a whitelist system, don't allow any other input except A-B, a-z, 0-9, some special characters (like - and _), enter button, and mouse click
+root.grab_set()
+
+# Prevent closing externally
+def on_closing():
+  pass
+root.protocol("WM_DELETE_WINDOW", on_closing)
+
+# Block some keys
+for key in ['esc', 'tab', 'ctrl', 'alt', 'win', 'del'] + [f'f{i}' for i in range(1, 13)]:
+  block_key(key)
+
+# Always focus on lock screen
+def keep_focus():
+  root.lift()
+  root.after(100, keep_focus)
+keep_focus()
+
+# ! There's no way to prevent Ctrl+Alt+Del without altering the underlying Windows system as it is undeniably crucial to mitigate crash and other fatal error, or just access task manager
 
 # Custom frame for optimized background
 class Frame(tk.Frame):
