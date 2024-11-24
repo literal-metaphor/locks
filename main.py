@@ -15,24 +15,44 @@ root.overrideredirect(True)
 # TODO: Prevent using Windows/Super key, Alt-F4, and other sneaky tactics
 # * Suggestion: Create a whitelist system, don't allow any other input except A-B, a-z, 0-9, some special characters (like - and _), enter button, and mouse click
 
-# Configure background
-img = Image.open('assets/Background.png')
-bg_img = ImageTk.PhotoImage(img)
-cvs = tk.Canvas(root,
-                width=0,
-                height=0,
-                highlightthickness=0,
-                borderwidth=0)
-cvs.pack(side=tk.TOP,
+# Custom frame for optimized background
+class Frame(tk.Frame):
+  def __init__(self, master, *pargs):
+    tk.Frame.__init__(self, master, *pargs)
+
+    # Open the background and make a copy for virtualized interaction
+    self.img = Image.open("assets/Background.png")
+    self.img_copy = self.img.copy()
+    self.bg_img = ImageTk.PhotoImage(self.img)
+
+    # Create a canvas inside the frame for basically what most of the app would be using
+    self.canvas = tk.Canvas(self,
+                            width=0,
+                            height=0,
+                            highlightthickness=0,
+                            borderwidth=0)
+    self.canvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+    self.canvas.bind('<Configure>', self.resize_bg) # Resize background image to fit the window size
+
+  def resize_bg(self, event):
+    # Resize the background image to fit the window size
+    self.img = self.img_copy.resize((event.width, event.height))
+    self.bg_img = ImageTk.PhotoImage(self.img)
+
+    # Add the background to canvas
+    self.canvas.create_image(0,
+                             0,
+                             image=self.bg_img,
+                             anchor=tk.NW)
+
+# Initialize main frame
+frame = Frame(root)
+frame.pack(side=tk.TOP,
          fill=tk.BOTH,
          expand=True)
-cvs.create_image(0,
-                 0,
-                 image=bg_img,
-                 anchor=tk.NW)
 
 # Create quit button
-quitBtn = tk.Button(cvs,
+quitBtn = tk.Button(frame.canvas,
                     text="Quit",
                     command=root.destroy)
 quitBtn.pack(side=tk.TOP, anchor=tk.W)
@@ -43,8 +63,8 @@ def datetime_tracker():
 
   # Time
   current_time = now.strftime("%H:%M")
-  cvs.delete("time_text")
-  cvs.create_text(80,
+  frame.canvas.delete("time_text")
+  frame.canvas.create_text(80,
                   440,
                   text=current_time,
                   fill="white",
@@ -57,8 +77,8 @@ def datetime_tracker():
   month_name = now.strftime("%B")
   date = now.day
 
-  cvs.delete("date_text")
-  cvs.create_text(80,
+  frame.canvas.delete("date_text")
+  frame.canvas.create_text(80,
                   520,
                   text=f"{day_name}, {month_name} {date}",
                   fill="white",
@@ -79,16 +99,16 @@ def inspire():
   quote = choice(data["quotes"])
 
   # Display the selected data
-  cvs.delete("quote_text")
-  cvs.delete("author_text")
-  cvs.create_text(80,
+  frame.canvas.delete("quote_text")
+  frame.canvas.delete("author_text")
+  frame.canvas.create_text(80,
                   590,
                   text=f'"{quote["quote"]}"',
                   fill="white",
                   font=('Inter 16'),
                   tag="quote_text",
                   anchor=tk.W)
-  cvs.create_text(80,
+  frame.canvas.create_text(80,
                   620,
                   text=f"- {quote["author"]}",
                   fill="white",
@@ -109,6 +129,6 @@ datetime_tracker()
 inspire()
 #################################
 # Initialize frame
-frame = tk.Frame(root)
+# frame = tk.Frame(root)
 # Lock and loaded, let's do this!
 root.mainloop()
