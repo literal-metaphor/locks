@@ -1,8 +1,9 @@
 import tkinter as tk
 from datetime import datetime
 from PIL import Image, ImageTk
-import json
+from json import load
 from random import choice
+from keyboard import block_key
 
 # TODO: Specify name main thingy
 
@@ -10,12 +11,20 @@ from random import choice
 # Initialize root #
 ###################
 root = tk.Tk()
+root.title("locks")
 
 # Prevent interaction outside the lock screen
-root.attributes('-fullscreen',True)
-root.overrideredirect(True)
-# TODO: Prevent using Windows/Super key, Alt-F4, and other sneaky tactics
-# * Suggestion: Create a whitelist system, don't allow any other input except A-B, a-z, 0-9, some special characters (like - and _), enter button, and mouse click
+root.wm_attributes('-fullscreen',True) # Focus fullscreen with no border
+root.wm_attributes("-topmost", True) # Force always on top of other apps
+root.overrideredirect(True) # Have no idea what this does, but let's just keep it there
+root.grab_set() # Supposedly always focus the lock screen
+# Prevent closing externally
+def on_closing():
+  pass
+root.protocol("WM_DELETE_WINDOW", on_closing)
+# Block some keys
+for key in ['esc', 'tab', 'ctrl', 'alt', 'win', 'del'] + [f'f{i}' for i in range(1, 13)]:
+  block_key(key)
 
 # Custom frame for optimized background
 class Frame(tk.Frame):
@@ -130,7 +139,7 @@ def clock_daemon():
 def inspire_daemon():
   # Open quotes.json data
   f = open('assets/quotes.json')
-  data = json.load(f)
+  data = load(f)
 
   # Get random quote
   quote = choice(data["quotes"])
