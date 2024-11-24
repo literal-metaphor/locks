@@ -12,6 +12,8 @@ root = tk.Tk()
 # Prevent interaction outside the lock screen
 root.attributes('-fullscreen',True)
 root.overrideredirect(True)
+# TODO: Prevent using Windows/Super key, Alt-F4, and other sneaky tactics
+# * Suggestion: Create a whitelist system, don't allow any other input except A-B, a-z, 0-9, some special characters (like - and _), enter button, and mouse click
 
 # Configure background
 img = Image.open('assets/Background.png')
@@ -67,6 +69,7 @@ def datetime_tracker():
   # Track every second
   root.after(1000, datetime_tracker)
 
+# TODO: Add fading-in and out animation (if possible)
 def inspire():
   # Open quotes.json data
   f = open('assets/quotes.json')
@@ -98,6 +101,8 @@ def inspire():
 
   # Change quote every 10 seconds
   root.after(10000, inspire)
+
+# TODO: Click goes to sign in menu, with animation if possible
 
 # Call everything
 datetime_tracker()
