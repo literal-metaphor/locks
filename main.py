@@ -4,6 +4,8 @@ from PIL import Image, ImageTk
 import json
 from random import choice
 
+# TODO: Specify name main thingy
+
 ###################
 # Initialize root #
 ###################
@@ -15,50 +17,11 @@ root.overrideredirect(True)
 # TODO: Prevent using Windows/Super key, Alt-F4, and other sneaky tactics
 # * Suggestion: Create a whitelist system, don't allow any other input except A-B, a-z, 0-9, some special characters (like - and _), enter button, and mouse click
 
-# Custom frame for optimized background
-class Frame(tk.Frame):
-  def __init__(self, master, *pargs):
-    tk.Frame.__init__(self, master, *pargs)
-
-    # Open the background and make a copy for virtualized interaction
-    self.img = Image.open("assets/Background.png")
-    self.img_copy = self.img.copy()
-    self.bg_img = ImageTk.PhotoImage(self.img)
-
-    # Create a canvas inside the frame for basically what most of the app would be using
-    self.canvas = tk.Canvas(self,
-                            width=0,
-                            height=0,
-                            highlightthickness=0,
-                            borderwidth=0)
-    self.canvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
-    self.canvas.bind('<Configure>', self.resize_bg) # Resize background image to fit the window size
-
-  def resize_bg(self, event):
-    # Resize the background image to fit the window size
-    self.img = self.img_copy.resize((event.width, event.height))
-    self.bg_img = ImageTk.PhotoImage(self.img)
-
-    # Add the background to canvas
-    self.canvas.create_image(0,
-                             0,
-                             image=self.bg_img,
-                             anchor=tk.NW)
-
-# Initialize main frame
-frame = Frame(root)
-frame.pack(side=tk.TOP,
-         fill=tk.BOTH,
-         expand=True)
-
-# Create quit button
-quitBtn = tk.Button(frame.canvas,
-                    text="Quit",
-                    command=root.destroy)
-quitBtn.pack(side=tk.TOP, anchor=tk.W)
-
+##################
+# Define daemons #
+##################
 # Track the date and time
-def datetime_tracker():
+def clock_daemon():
   now = datetime.now()
 
   # Time
@@ -87,10 +50,10 @@ def datetime_tracker():
                   anchor=tk.W)
 
   # Track every second
-  root.after(1000, datetime_tracker)
+  root.after(1000, clock_daemon)
 
 # TODO: Add fading-in and out animation (if possible)
-def inspire():
+def inspire_daemon():
   # Open quotes.json data
   f = open('assets/quotes.json')
   data = json.load(f)
@@ -120,15 +83,54 @@ def inspire():
   f.close()
 
   # Change quote every 10 seconds
-  root.after(10000, inspire)
+  root.after(10000, inspire_daemon)
+
+# Custom frame for optimized background
+class Frame(tk.Frame):
+  def __init__(self, master, *pargs):
+    tk.Frame.__init__(self, master, *pargs)
+
+    # Open the background and make a copy for virtualized interaction
+    self.img = Image.open("assets/Background.png")
+    self.img_copy = self.img.copy()
+    self.bg_img = ImageTk.PhotoImage(self.img)
+
+    # Create a canvas inside the frame for basically what most of the app would be using
+    self.canvas = tk.Canvas(self,
+                            width=0,
+                            height=0,
+                            highlightthickness=0,
+                            borderwidth=0)
+    self.canvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+    self.canvas.bind('<Configure>', self.configure)
+
+  def configure(self, event):
+    # Resize the background image to fit the window size
+    self.img = self.img_copy.resize((event.width, event.height))
+    self.bg_img = ImageTk.PhotoImage(self.img)
+    # Add the background to canvas
+    self.canvas.create_image(0,
+                             0,
+                             image=self.bg_img,
+                             anchor=tk.NW)
+
+    # Call the trackers
+    clock_daemon()
+    inspire_daemon()
+
+# Initialize main frame
+frame = Frame(root)
+frame.pack(side=tk.TOP,
+         fill=tk.BOTH,
+         expand=True)
+
+# Create quit button
+quitBtn = tk.Button(frame.canvas,
+                    text="Quit",
+                    command=root.destroy)
+quitBtn.pack(side=tk.TOP, anchor=tk.W)
 
 # TODO: Click goes to sign in menu, with animation if possible
-
-# Call everything
-datetime_tracker()
-inspire()
 #################################
-# Initialize frame
-# frame = tk.Frame(root)
 # Lock and loaded, let's do this!
 root.mainloop()
