@@ -4,6 +4,8 @@ from PIL import Image, ImageTk
 from json import load
 from random import choice
 from keyboard import block_key
+from time import sleep
+from threading import Thread
 
 # TODO: Specify name main thingy
 
@@ -99,75 +101,80 @@ def fix_coordinaates():
   author_y = quote_y + 40
 
 def init_daemon():
-  clock_daemon()
-  inspire_daemon()
+  clock_thread = Thread(target=clock_daemon, daemon=True)
+  inspire_thread = Thread(target=inspire_daemon, daemon=True)
+
+  clock_thread.start()
+  inspire_thread.start()
 
 # Track the date and time
 def clock_daemon():
-  now = datetime.now()
+  while True:
+    now = datetime.now()
 
-  # Time
-  current_time = now.strftime("%H:%M")
+    # Time
+    current_time = now.strftime("%H:%M")
 
-  frame.canvas.delete("time_text")
-  frame.canvas.create_text(time_x,
-                  time_y,
-                  text=current_time,
-                  fill="white",
-                  font=('Inter 64'),
-                  tag="time_text",
-                  anchor=tk.W)
+    frame.canvas.delete("time_text")
+    frame.canvas.create_text(time_x,
+                    time_y,
+                    text=current_time,
+                    fill="white",
+                    font=('Inter 64'),
+                    tag="time_text",
+                    anchor=tk.W)
 
-  # Date
-  day_name = now.strftime("%A")
-  month_name = now.strftime("%B")
-  date = now.day
+    # Date
+    day_name = now.strftime("%A")
+    month_name = now.strftime("%B")
+    date = now.day
 
-  frame.canvas.delete("date_text")
-  frame.canvas.create_text(date_x,
-                  date_y,
-                  text=f"{day_name}, {month_name} {date}",
-                  fill="white",
-                  font=('Inter 32'),
-                  tag="date_text",
-                  anchor=tk.W)
+    frame.canvas.delete("date_text")
+    frame.canvas.create_text(date_x,
+                            date_y,
+                            text=f"{day_name}, {month_name} {date}",
+                            fill="white",
+                            font=('Inter 32'),
+                            tag="date_text",
+                            anchor=tk.W)
 
-  # Track every second
-  root.after(1000, clock_daemon)
+    # Track every second
+    sleep(1)
 
 # TODO: Add fading-in and out animation (if possible)
 def inspire_daemon():
-  # Open quotes.json data
-  f = open('assets/quotes.json')
-  data = load(f)
+  while True:
+    # Open quotes.json data
+    f = open('assets/quotes.json')
+    data = load(f)
 
-  # Get random quote
-  quote = choice(data["quotes"])
+    # Get random quote
+    quote = choice(data["quotes"])
 
-  # Display the selected data
-  frame.canvas.delete("quote_text")
-  frame.canvas.delete("author_text")
+    # Display the selected data
+    frame.canvas.delete("quote_text")
+    frame.canvas.delete("author_text")
 
-  frame.canvas.create_text(quote_x,
-                            quote_y,
-                            text=f'"{quote["quote"]}"',
-                            fill="white",
-                            font=('Inter', 16),
-                            tag="quote_text",
-                            anchor=tk.W)
-  frame.canvas.create_text(author_x,
-                            author_y,
-                            text=f"- {quote['author']}",
-                            fill="white",
-                            font=('Inter', 13),
-                            tag="author_text",
-                            anchor=tk.W)
+    frame.canvas.create_text(quote_x,
+                              quote_y,
+                              text=f'"{quote["quote"]}"',
+                              fill="white",
+                              font=('Inter', 16),
+                              tag="quote_text",
+                              anchor=tk.W)
+    frame.canvas.create_text(author_x,
+                              author_y,
+                              text=f"- {quote['author']}",
+                              fill="white",
+                              font=('Inter', 13),
+                              tag="author_text",
+                              anchor=tk.W)
 
-  # Close the file
-  f.close()
+    # Close the file
+    f.close()
 
-  # Change quote every 10 seconds
-  root.after(10000, inspire_daemon)
+    # Change quote every 10 seconds
+    sleep(10)
 
 # Create quit button
 quitBtn = tk.Button(frame.canvas,
